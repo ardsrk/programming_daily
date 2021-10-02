@@ -32,7 +32,6 @@ def merge_inversions(l, r, inv)
 end
 
 def count_inversions(a, inv=0)
-  p "ci: #{a}"
   if a.count <= 1
     return a, 0 
   else
