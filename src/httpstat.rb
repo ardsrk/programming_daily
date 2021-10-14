@@ -3,13 +3,27 @@
 
 require 'shellwords'
 require 'json'
+require 'tempfile'
 
 COLORS = {
-  :cyan => 36
+  :cyan => 36,
+  :green => 32
 }
+
+GRAYSCALE = 232.upto(255).collect do |i|
+  "38;5;#{i}"
+end
 
 def cyan(text)
   "\e[#{COLORS[:cyan]}m#{text}\e[0m"
+end
+
+def green(text)
+  "\e[#{COLORS[:green]}m#{text}\e[0m"
+end
+
+def grayscale(index, text)
+  "\e[#{GRAYSCALE[index]}m#{text}\e[0m"
 end
 
 USAGE = %Q(
@@ -40,7 +54,23 @@ curl_format = %Q({
 "local_port": "%{local_port}"
 })
 
-o = `curl -w #{Shellwords.escape(curl_format)} #{Shellwords.escape(ARGV.first)} -o /dev/null --stderr /dev/null`
+hf = Tempfile.new
+hf.close
+
+o = `curl -w #{Shellwords.escape(curl_format)} -D #{Shellwords.escape(hf.to_path)} #{Shellwords.escape(ARGV.first)} -o /dev/null --stderr /dev/null`
 d = JSON.parse(o)
 
 puts "Connected to #{cyan(d['remote_ip'])}:#{cyan(d['remote_port'])} from #{d['local_ip']}:#{d['local_port']}"
+
+headers = File.read(hf.to_path)
+
+puts ""
+headers.split("\r\n").each_with_index do |header, index|
+  if index == 0
+    p1, p2 = header.split('/')
+    puts(green(p1) + grayscale(14, '/') + cyan(p2.to_s.strip))
+  else
+    key, value = header.split(":")
+    puts "#{grayscale(16, key+":")} #{cyan(value.to_s.strip)}"  
+  end
+end
