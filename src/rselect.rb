@@ -53,7 +53,7 @@ input = [96, 89, 73, 85, 55, 17, 32, 68, 46, 5]
 
 puts "Input: #{input}"
 
-print "Enter a number between 1 to 10: "
+print "Enter a number between 1 and 10: "
 
 index = gets.chomp.to_i
 
