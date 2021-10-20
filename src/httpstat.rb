@@ -7,7 +7,8 @@ require 'tempfile'
 
 COLORS = {
   :cyan => 36,
-  :green => 32
+  :green => 32,
+  :yellow => 33,
 }
 
 GRAYSCALE = 232.upto(255).collect do |i|
@@ -16,6 +17,10 @@ end
 
 def cyan(text)
   "\e[#{COLORS[:cyan]}m#{text}\e[0m"
+end
+
+def yellow(text)
+  "\e[#{COLORS[:yellow]}m#{text}\e[0m"
 end
 
 def green(text)
@@ -77,13 +82,23 @@ https_template = %Q(
 hf = Tempfile.new
 hf.close
 
-o = `curl -w #{Shellwords.escape(curl_format)} -D #{Shellwords.escape(hf.to_path)} #{Shellwords.escape(ARGV.first)} -o /dev/null --stderr /dev/null`
+errf = Tempfile.new
+errf.close
+
+o = `curl -w #{Shellwords.escape(curl_format)} -D #{Shellwords.escape(hf.to_path)} #{Shellwords.escape(ARGV.first)} -o /dev/null --stderr #{Shellwords.escape(errf.to_path)} -s -S`
 d = JSON.parse(o)
 
-puts "Connected to #{cyan(d['remote_ip'])}:#{cyan(d['remote_port'])} from #{d['local_ip']}:#{d['local_port']}"
 
 headers = File.read(hf.to_path)
 
+error = File.read(errf.to_path)
+
+if error.size > 0
+  puts(yellow(error))
+  exit
+end
+
+puts "Connected to #{cyan(d['remote_ip'])}:#{cyan(d['remote_port'])} from #{d['local_ip']}:#{d['local_port']}"
 puts ""
 headers.split("\r\n").each_with_index do |header, index|
   if index == 0
@@ -129,3 +144,7 @@ if ENV['HTTPSTAT_SHOW_SPEED'].to_s.downcase == 'true'
   puts('speed_download: %.1f KiB/s, speed_upload: %.1f KiB/s' %
     [d['speed_download'] / 1024, d['speed_upload'] / 1024])
 end
+
+# TODO:
+# 1. Support environment variables 
+# 2. Use fork to run command in child process [ https://github.com/stripe/subprocess ]
