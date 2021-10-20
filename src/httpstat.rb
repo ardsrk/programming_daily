@@ -124,3 +124,8 @@ https_template.sub!("{b0002}", fmtb(d['time_pretransfer'].to_s))
 https_template.sub!("{b0003}", fmtb(d['time_starttransfer'].to_s))
 https_template.sub!("{b0004}", fmtb(d['time_total'].to_s))
 puts https_template
+
+if ENV['HTTPSTAT_SHOW_SPEED'].to_s.downcase == 'true'
+  puts('speed_download: %.1f KiB/s, speed_upload: %.1f KiB/s' %
+    [d['speed_download'] / 1024, d['speed_upload'] / 1024])
+end
