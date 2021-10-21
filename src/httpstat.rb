@@ -98,18 +98,6 @@ if error.size > 0
   exit
 end
 
-puts "Connected to #{cyan(d['remote_ip'])}:#{cyan(d['remote_port'])} from #{d['local_ip']}:#{d['local_port']}"
-puts ""
-headers.split("\r\n").each_with_index do |header, index|
-  if index == 0
-    p1, p2 = header.split('/')
-    puts(green(p1) + grayscale(14, '/') + cyan(p2.to_s.strip))
-  else
-    key, value = header.split(":")
-    puts "#{grayscale(16, key+":")} #{cyan(value.to_s.strip)}"  
-  end
-end
-
 d.each do |k, v|
   if k.start_with?("time_")
     if v == v.to_i
@@ -121,11 +109,29 @@ d.each do |k, v|
 end
 
 d.merge!({
+  'range_dns' => d['time_namelookup'],
   'range_connection' => d['time_connect'] - d['time_namelookup'],
   'range_ssl' => d['time_pretransfer'] - d['time_connect'],
   'range_server' => d['time_starttransfer'] - d['time_pretransfer'],
   'range_transfer' => d['time_total'] - d['time_starttransfer']
 })
+
+if ENV['HTTPSTAT_METRICS_ONLY'].to_s.downcase == 'true'
+  puts JSON.pretty_generate(d)
+  exit
+end
+
+puts "Connected to #{cyan(d['remote_ip'])}:#{cyan(d['remote_port'])} from #{d['local_ip']}:#{d['local_port']}"
+puts ""
+headers.split("\r\n").each_with_index do |header, index|
+  if index == 0
+    p1, p2 = header.split('/')
+    puts(green(p1) + grayscale(14, '/') + cyan(p2.to_s.strip))
+  else
+    key, value = header.split(":")
+    puts "#{grayscale(16, key+":")} #{cyan(value.to_s.strip)}"
+  end
+end
 
 https_template.sub!("{a0000}", fmta(d['time_namelookup'].to_s))
 https_template.sub!("{a0001}", fmta(d['range_connection'].to_s))
