@@ -1,6 +1,3 @@
-# Buggy Program
-# Output of strongly connected components depends on the order of vertices
-
 # Find strongly connected components in directed graphs
 # using Kosaraju's alogrithm
 #
@@ -9,7 +6,6 @@
 
 # Output depends on the order of vertices
 VERTICES = ('a'..'i').to_a.shuffle
-p VERTICES
 
 GRAPH = {
   'a' => ['c'],
@@ -48,7 +44,6 @@ end
 
 def dfs(graph, v)
   $explored[v] = true
-  $leader[v] = $s
   graph[v].each do |w|
     unless $explored[w]
       dfs(graph, w)
@@ -61,9 +56,7 @@ end
 
 def set
   $t = 0
-  $s = nil
   $explored = {}
-  $leader = {}
   $pos = {}
   $roots = []
 end
@@ -72,7 +65,6 @@ def first_pass
   reversed = reverse(GRAPH)
   VERTICES.each do |v|
     unless $explored[v]
-      $s = v
       dfs(reversed, v)
     end
   end
@@ -80,7 +72,6 @@ end
 
 def dfs(graph, v)
   $explored[v] = true
-  $leader[v] = $s
   graph[v].each do |w|
     unless $explored[w]
       dfs(graph, w)
@@ -90,13 +81,15 @@ def dfs(graph, v)
   $pos[v] = $t
 end
 
+
 set
 first_pass
-order = $pos.sort_by {|k, v| v}.map {|el| el[0]}
+order = $pos.sort_by {|k, v| v}.map {|el| el[0]}.reverse
 set
+
+# Execute DFS on vertices in decreasing order of finishing times
 order.each do |v|
   unless $explored[v]
-    $s = v
     $roots << v
     dfs(GRAPH, v)
   end
