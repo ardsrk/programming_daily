@@ -1,3 +1,6 @@
+# Buggy Program
+# Output of strongly connected components depends on the order of vertices
+
 # Find strongly connected components in directed graphs
 # using Kosaraju's alogrithm
 #
@@ -6,6 +9,7 @@
 
 # Output depends on the order of vertices
 VERTICES = ('a'..'i').to_a.shuffle
+p VERTICES
 
 GRAPH = {
   'a' => ['c'],
