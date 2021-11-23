@@ -2,6 +2,7 @@
 #
 # References:
 #   https://www.youtube.com/watch?v=QNSAqmvu4ZQ
+#   https://www.youtube.com/watch?v=usq3dxJ2r5k
 
 class BST
 
@@ -39,6 +40,14 @@ class BST
     end
   end
 
+  def min
+    left ? left.min : value
+  end
+
+  def max
+    right ? right.max : value
+  end
+
   def to_s
     (left || "").to_s +
       "#{value.to_s} " +
@@ -58,3 +67,6 @@ puts ""
 puts "Inorder traversal: #{bst}"
 puts "Tree has number 7? #{bst.search(7) ? 'yes' : 'no'}"
 puts "Tree has number 9? #{bst.search(9) ? 'yes' : 'no'}"
+puts ""
+puts "Minimum: #{bst.min}"
+puts "Maximum: #{bst.max}"
