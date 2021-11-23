@@ -53,16 +53,18 @@ class BST
   def pred(num)
     node = search(num)
     if(node.left)
-      node.left.max
+      node = node.left
+      while(node.right)
+        node = node.right
+      end
+      node
     else
       node = node.parent
       while(node && node.value > num)
         node = node.parent
       end
       if node && node.value != num
-        node.value
-      else
-        "nil"
+        node
       end
     end
   end
@@ -70,16 +72,18 @@ class BST
   def succ(num)
     node = search(num)
     if(node.right)
-      node.right.min
+      node = node.right
+      while(node.left)
+        node = node.left
+      end
+      node
     else
       node = node.parent
       while(node && node.value < num)
         node = node.parent
       end
       if node && node.value != num
-        node.value
-      else
-        "nil"
+        node
       end
     end
   end
@@ -108,10 +112,10 @@ puts "Minimum: #{bst.min}"
 puts "Maximum: #{bst.max}"
 puts ""
 input.each do |num|
-  puts "Predecessor of #{num}: #{bst.pred(num)}"
+  puts "Predecessor of #{num}: #{pred = bst.pred(num); pred ? pred.value : "nil"}"
 end
 
 puts ""
 input.each do |num|
-  puts "Successor of #{num}: #{bst.succ(num)}"
+  puts "Successor of #{num}: #{succ = bst.succ(num); succ ? succ.value : "nil"}"
 end
