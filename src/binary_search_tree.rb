@@ -6,7 +6,7 @@
 
 class BST
 
-  attr_accessor :value, :left, :right
+  attr_accessor :value, :left, :right, :parent
 
   def initialize(value)
     @value = value
@@ -20,12 +20,14 @@ class BST
         left.insert(num)
       else
         self.left = self.class.new(num)
+        left.parent = self
       end
     else
       if(right)
         right.insert(num)
       else
         self.right = self.class.new(num)
+        right.parent = self
       end
     end
   end
@@ -46,6 +48,40 @@ class BST
 
   def max
     right ? right.max : value
+  end
+
+  def pred(num)
+    node = search(num)
+    if(node.left)
+      node.left.max
+    else
+      node = node.parent
+      while(node && node.value > num)
+        node = node.parent
+      end
+      if node && node.value != num
+        node.value
+      else
+        "nil"
+      end
+    end
+  end
+
+  def succ(num)
+    node = search(num)
+    if(node.right)
+      node.right.min
+    else
+      node = node.parent
+      while(node && node.value < num)
+        node = node.parent
+      end
+      if node && node.value != num
+        node.value
+      else
+        "nil"
+      end
+    end
   end
 
   def to_s
@@ -70,3 +106,12 @@ puts "Tree has number 9? #{bst.search(9) ? 'yes' : 'no'}"
 puts ""
 puts "Minimum: #{bst.min}"
 puts "Maximum: #{bst.max}"
+puts ""
+input.each do |num|
+  puts "Predecessor of #{num}: #{bst.pred(num)}"
+end
+
+puts ""
+input.each do |num|
+  puts "Successor of #{num}: #{bst.succ(num)}"
+end
