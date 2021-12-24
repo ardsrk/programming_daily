@@ -1,6 +1,6 @@
 # Huffman encoding is a greedy algorithm to encode given symbols into binary strings
-# with the property that the length of the encoded string of an arbitrary
-# string of symbols will be optimal.
+# with the property that the average length of the encoded string of arbitrary
+# string of symbols will be minimum.
 #
 # References:
 #   https://www.youtube.com/watch?v=K3WZhFZT6Y0
