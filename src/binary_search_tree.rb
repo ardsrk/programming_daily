@@ -164,34 +164,36 @@ class BST
   end
 end
 
-input = [3, 8, 2, 5, 1, 4, 7, 6]
+if __FILE__ == $0
+  input = [3, 8, 2, 5, 1, 4, 7, 6]
 
-$bst = BST.new(input[0])
-input[1..-1].each do |number|
-  $bst.insert(number)
-end
+  $bst = BST.new(input[0])
+  input[1..-1].each do |number|
+    $bst.insert(number)
+  end
 
-puts "Input: #{input}"
-puts ""
-puts "Inorder traversal: #{$bst}"
-puts "Tree has number 7? #{$bst.search(7) ? 'yes' : 'no'}"
-puts "Tree has number 9? #{$bst.search(9) ? 'yes' : 'no'}"
-puts ""
-puts "Minimum: #{$bst.min}"
-puts "Maximum: #{$bst.max}"
-puts ""
-input.each do |num|
-  puts "Predecessor of #{num}: #{pred = $bst.pred(num); pred ? pred.value : 'nil'}"
-end
+  puts "Input: #{input}"
+  puts ""
+  puts "Inorder traversal: #{$bst}"
+  puts "Tree has number 7? #{$bst.search(7) ? 'yes' : 'no'}"
+  puts "Tree has number 9? #{$bst.search(9) ? 'yes' : 'no'}"
+  puts ""
+  puts "Minimum: #{$bst.min}"
+  puts "Maximum: #{$bst.max}"
+  puts ""
+  input.each do |num|
+    puts "Predecessor of #{num}: #{pred = $bst.pred(num); pred ? pred.value : 'nil'}"
+  end
 
-puts ""
-input.each do |num|
-  puts "Successor of #{num}: #{succ = $bst.succ(num); succ ? succ.value : 'nil'}"
-end
+  puts ""
+  input.each do |num|
+    puts "Successor of #{num}: #{succ = $bst.succ(num); succ ? succ.value : 'nil'}"
+  end
 
-puts ""
-input.shuffle.each do |num|
-  puts "Deleting #{num}"
-  $bst.delete(num)
-  puts "BST after deleting #{num}: #{$bst}"
+  puts ""
+  input.shuffle.each do |num|
+    puts "Deleting #{num}"
+    $bst.delete(num)
+    puts "BST after deleting #{num}: #{$bst}"
+  end
 end
