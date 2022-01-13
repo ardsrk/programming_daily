@@ -88,7 +88,6 @@ end
 
 puts "Items       : #{items}"
 puts "Frequencies : #{freqs}"
-puts "Cost Table  : #{$cost_table}"
 puts ""
 puts "Optimal Cost: #{optimal_search_tree(items, freqs)}"
 puts "Tree        : #{build_tree(0, items.count-1, items)}"
