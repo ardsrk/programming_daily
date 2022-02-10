@@ -18,6 +18,13 @@
 # Output: 
 #   Shortest path costs from a single vertex to all
 #   other vertices arranged by number of edges in the path. 
+#
+# References:
+#   https://www.youtube.com/watch?v=oyHoqtxHiOs
+#   https://www.youtube.com/watch?v=06OK99Aak60
+#   https://www.youtube.com/watch?v=d1TWZa20Mkw
+#   https://www.youtube.com/watch?v=HaXTsC8eOfo
+#   https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
 
 # set of vertices
 V = ['s', 't', 'v', 'w', 'x']
