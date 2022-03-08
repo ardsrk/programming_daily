@@ -23,6 +23,9 @@ t = {}
 # cost of tour
 cost = nil
 
+# total number of operations
+ops = 0
+
 require_relative './permutation'
 
 permutation(V[1..-1]) do |vertices|
@@ -30,6 +33,7 @@ permutation(V[1..-1]) do |vertices|
   tcost = 0
   result = {}
   (vertices + ['a']).each do |vertex|
+    ops = ops + 1
     (result[s] ||= {}).merge!({vertex => G[s][vertex]})
     tcost += G[s][vertex]
     s = vertex
@@ -43,6 +47,9 @@ end
 require 'pp'
 puts "Input Graph:"
 pp G
-puts "Tour Cost (minimum): #{cost}"
-puts "Tour: "
+puts "\nTour Cost (minimum): #{cost}"
+puts "\nTour: "
 pp t
+
+# Total number of operations is factorial(n-1) * (n), where n is the count of vertices in graph G
+puts "\nNumber of operations: #{ops}"
