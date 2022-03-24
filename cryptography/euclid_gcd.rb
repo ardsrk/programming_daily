@@ -5,10 +5,6 @@
 require_relative './division_algorithm'
 
 def gcd(a, b)
-  if a < b
-    a, b = b, a
-  end
-
   if a == 0 && b == 0
     0
   elsif a == 0

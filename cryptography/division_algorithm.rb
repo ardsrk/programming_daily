@@ -24,12 +24,14 @@ def divide(dividend, divisor)
   [quotient, remainder]
 end
 
-dividend = 45
-divisor = 11
-quotient, remainder = divide(dividend, divisor)
-puts "#{'%3d' % dividend} = #{'%2d' % quotient}*#{divisor} + #{remainder}"
+if __FILE__ == $0
+  dividend = 45
+  divisor = 11
+  quotient, remainder = divide(dividend, divisor)
+  puts "#{'%3d' % dividend} = #{'%2d' % quotient}*#{divisor} + #{remainder}"
 
-dividend = -45
-divisor = 11
-quotient, remainder = divide(dividend, divisor)
-puts "#{'%3d' % dividend} = #{'%2d' % quotient}*#{divisor} + #{remainder}"
+  dividend = -45
+  divisor = 11
+  quotient, remainder = divide(dividend, divisor)
+  puts "#{'%3d' % dividend} = #{'%2d' % quotient}*#{divisor} + #{remainder}"
+end
