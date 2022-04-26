@@ -21,20 +21,27 @@ G = {
   'e' => {'a' => 10, 'b' => 3, 'c' => 8, 'd' => 9},
 }
 
-Tour = Struct.new(:vertices, :costs) do 
+Tour = Struct.new(:vertices) do
   def total_cost
-    costs.sum
+    all_vertices = vertices + [vertices[0]]
+    all_vertices.each_with_index.inject(0) do |cost, (v, i)|
+      if(i < all_vertices.count-1)
+        cost = cost + G[v][all_vertices[i+1]]
+      else
+        cost
+      end
+    end
   end
 
-  def extend(vertex, cost)
+  def extend(vertex)
     self.vertices << vertex
-    self.costs << cost
   end
 
   def to_s
-    vertices.each_with_index.inject({}) do |h, (v, i)|
-      if(vertices[i+1])
-        h.merge!(v => {vertices[i+1] => costs[i]})
+    all_vertices = vertices + [vertices[0]]
+    all_vertices.each_with_index.inject({}) do |h, (v, i)|
+      if(all_vertices[i+1])
+        h.merge!(v => {all_vertices[i+1] => G[v][all_vertices[i+1]]})
       else
         h
       end
@@ -50,7 +57,7 @@ end
 s = start = 'a'
 
 # set of edges in tour
-t = Tour.new(['a'], [])
+t = Tour.new(['a'])
 
 # total number of operations
 ops = 0
@@ -67,10 +74,9 @@ while t.vertices.count < V.count
       end
     end
   end
-  t.extend(vertex, G[s][vertex])
+  t.extend(vertex)
   s = vertex
 end
-t.extend(start, G[s][start])
 
 
 Edge = Struct.new(:src, :dest) do
