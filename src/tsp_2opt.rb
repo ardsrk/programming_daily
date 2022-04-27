@@ -8,11 +8,12 @@
 # Solution: Find the tour having minimum total edge cost by greedy search followed by 2opt change
 #
 # References:
-#   https://www.youtube.com/watch?v=dYEWqrp-mho
+#   https://www.youtube.com/watch?v=8vbKIfpDPJI
 
 # set of vertices
 V = ['a', 'b', 'c', 'd', 'e']
 
+# Complete weighted undirected graph
 G = {
   'a' => {'b' => 1, 'c' => 4, 'd' => 5, 'e' => 10},
   'b' => {'a' => 1, 'c' => 2, 'd' => 6, 'e' => 3},
@@ -30,6 +31,12 @@ Tour = Struct.new(:vertices) do
       else
         cost
       end
+    end
+  end
+
+  def dup
+    super.tap do |t|
+      t.vertices = self.vertices.dup
     end
   end
 
@@ -57,83 +64,57 @@ end
 s = start = 'a'
 
 # set of edges in tour
-t = Tour.new(['a'])
+greedy_tour = Tour.new(['a'])
 
 # total number of operations
-ops = 0
+$ops = 0
 
-while t.vertices.count < V.count
+while greedy_tour.vertices.count < V.count
   min = nil
   vertex = nil
   G[s].each do |v, c|
-    ops = ops + 1
-    unless t.vertices.include?(v)
+    $ops = $ops + 1
+    unless greedy_tour.vertices.include?(v)
       if min.nil? || min > c
         vertex = v
         min = c
       end
     end
   end
-  t.extend(vertex)
+  greedy_tour.extend(vertex)
   s = vertex
 end
 
-
-Edge = Struct.new(:src, :dest) do
-  def two_change_allowed?(e)
-    # allowed if there is no common vertex shared by the two edges
-    ([self.src, self.dest] & [e.src, e.dest]).nil?
-  end
-
-  def valid?
-    src && dest
-  end
-
-  def ==(e)
-    self.src == e.src && self.dest == e.dest
-  end
-end
-
-TwoChange = Struct.new(:e1, :e2) do
-  def ==(tc)
-    self.e1 == tc.e1 && self.e2 == tc.e2
-  end
-
-  def valid?
-    e1.valid? && e2.valid?
-  end
-end
-
 def generate_two_change(t, index)
-  vertices = t.vertices[0...-1] + t.vertices[0...-1]
-  src1 = vertices[index]
-  dest1 = vertices[index+1]
-  if dest1
-    dest2 = vertices[index+2]
-    src2 = vertices[index+3] if dest2
+  size = t.vertices.count
+  pos1 = (index+1) % size
+  pos2 = (index+2) % size
+  t.dup.tap do |nt|
+    vs = nt.vertices
+    vs[pos1], vs[pos2] = vs[pos2], vs[pos1]
   end
-  e1 = Edge.new(src1, dest1)
-  e2 = Edge.new(src2, dest2)
-  TwoChange.new(e1, e2)
 end
 
-def all_two_changes(t)
-  changes = []
+def tsp_2opt(t)
+  min_tour = t
   total_two_changes = (V.count * (V.count-3)) / 2
   total_two_changes.times do |i|
-    two_change = generate_two_change(t, i)
-    if two_change.valid? && !changes.include?(two_change)
-      changes << two_change
+    $ops = $ops + 1
+    two_change_tour = generate_two_change(t, i)
+    if min_tour.total_cost > two_change_tour.total_cost
+      min_tour = two_change_tour
     end
   end
-  changes
+  min_tour
 end
+
+min_tour = tsp_2opt(greedy_tour)
 
 puts "Input Graph:"
 pp G
-puts "\nTour Cost (minimum): #{t.total_cost}"
+puts "\nTour Cost (minimum): #{min_tour.total_cost}"
 puts "\nTour: "
-p t
+p min_tour
 
-# Total number of operations is linear to the number of edges in graph G
-puts "\nNumber of operations: #{ops}"
+# Total number of operations is bounded by n-squared where n is the number of vertices
+puts "\nNumber of operations: #{$ops}"
