@@ -96,14 +96,20 @@ def generate_two_change(t, index)
 end
 
 def tsp_2opt(t)
-  min_tour = t
   total_two_changes = (V.count * (V.count-3)) / 2
-  total_two_changes.times do |i|
-    $ops = $ops + 1
-    two_change_tour = generate_two_change(t, i)
-    if min_tour.total_cost > two_change_tour.total_cost
-      min_tour = two_change_tour
+  min_tour = t
+  loop do
+    halt = true
+    total_two_changes.times do |i|
+      $ops = $ops + 1
+      two_change_tour = generate_two_change(min_tour, i)
+      if min_tour.total_cost > two_change_tour.total_cost
+        halt = false
+        min_tour = two_change_tour
+        break
+      end
     end
+    break if halt
   end
   min_tour
 end
@@ -116,5 +122,5 @@ puts "\nTour Cost (minimum): #{min_tour.total_cost}"
 puts "\nTour: "
 p min_tour
 
-# Total number of operations is bounded by n-squared where n is the number of vertices
+# number of operations depends on number of improving tours that generate_two_change can produce
 puts "\nNumber of operations: #{$ops}"
