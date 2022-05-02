@@ -8,7 +8,7 @@
 #   Find x and y that solves the equation.
 #
 # Output:
-#   Integers a and b that solves the equaton.
+#   Integers x and y that solves the equaton.
 #
 # References:
 #   https://brilliant.org/wiki/linear-diophantine-equations-one-equation/
