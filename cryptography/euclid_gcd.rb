@@ -17,6 +17,8 @@ def gcd(a, b)
   end
 end
 
-puts "gcd(12, 8) = #{gcd(12, 8)}"
-puts "gcd(8, 12) = #{gcd(8, 12)}"
-puts "gcd(270, 192) = #{gcd(270, 192)}"
+if __FILE__ == $0
+  puts "gcd(12, 8) = #{gcd(12, 8)}"
+  puts "gcd(8, 12) = #{gcd(8, 12)}"
+  puts "gcd(270, 192) = #{gcd(270, 192)}"
+end
