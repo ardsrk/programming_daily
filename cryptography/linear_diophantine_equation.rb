@@ -23,7 +23,6 @@ def lde(a, b, c)
     return
   end
   q = (c / d).to_i
-  bq = b / d
   return x*q, y*q
 end
 
