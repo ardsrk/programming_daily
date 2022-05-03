@@ -23,23 +23,23 @@ def lde(a, b, c)
     return
   end
   q = (c / d).to_i
-  return x*q, y*q
+  return d, x*q, y*q
 end
 
-a = 21; b = 15; c = 12 
-print "Equation: #{a}x + #{b}y = #{c}; "
-x, y = lde(a, b, c)
-if x.nil?
-  puts "has no solution"
-else
-  puts "x=#{x}; y=#{y}"
+def print_solution_lde(a, b, c)
+  print "Equation: #{a}x + #{b}y = #{c}; "
+  d, x, y = lde(a, b, c)
+  if x.nil?
+    puts "has no solution"
+  else
+    puts "x=#{x}; y=#{y}"
+  end
 end
-puts 
-a = 14; b = 91; c = 53 
-print "Equation: #{a}x + #{b}y = #{c}; "
-x, y = lde(a, b, c)
-if x.nil?
-  puts "has no solution"
-else
-  puts "x=#{x}; y=#{y}"
+
+if __FILE__ == $0
+  a = 21; b = 15; c = 12 
+  print_solution_lde(a, b, c)
+  puts 
+  a = 14; b = 91; c = 53 
+  print_solution_lde(a, b, c)
 end
