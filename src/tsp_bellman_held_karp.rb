@@ -85,3 +85,5 @@ puts "Cost Table:"
 
 require 'pp'
 pp A
+
+#TODO: Construct the minimum cost TSP tour based on the cost table (A)
