@@ -18,6 +18,10 @@ class Integer
   def to_bin(msb)
     ("%#{msb}s" % self.to_s(2)).gsub(" ", "0")
   end
+
+  def to_hex(msb)
+    ("%#{msb}s" % self.to_s(16)).gsub(" ", "0")
+  end
 end
 
 class DES
@@ -319,6 +323,38 @@ class DES
     @rl_16 = (send("r16").to_bin(DES::BLOCK_SIZE/2) + send("l16").to_bin(DES::BLOCK_SIZE/2)).to_i(2)
     ip_inv.to_s(16)
   end
+
+  def decrypt(cipher)
+    bin_cipher = cipher.to_i(16).to_bin(BLOCK_SIZE)
+    cipher_ip = IP.collect do |row|
+      row.collect do |idx|
+        bin_cipher[idx-1]
+      end
+    end.flatten.join.to_i(2)
+
+    cl0 = (cipher_ip.to_bin(DES::BLOCK_SIZE)[0..31]).to_i(2)
+    cr0 = (cipher_ip.to_bin(DES::BLOCK_SIZE)[32..-1]).to_i(2)
+
+    cl_array = [cl0]
+    cr_array = [cr0]
+
+    idx = 1
+    16.downto(1) do |i|
+      cl_array << cr_array[idx-1]
+      cr_array << (cl_array[idx-1] ^ f(cr_array[idx-1], send("k#{i}")))
+      idx = idx + 1
+    end
+    crl_16 = (cr_array.last.to_bin(DES::BLOCK_SIZE/2) + cl_array.last.to_bin(DES::BLOCK_SIZE/2)).to_i(2)
+
+    crl_bin = crl_16.to_bin(BLOCK_SIZE)
+    plain_text = IP_INV.collect do |row|
+      row.collect do |idx|
+        crl_bin[idx-1]
+      end
+    end.flatten.join.to_i(2)
+
+    plain_text.to_hex(DES::BLOCK_SIZE/4)
+  end
 end
 
 def pretty_print(binary_string, sep)
@@ -334,4 +370,7 @@ puts "       KEY: #{d.key}"
 m = "0123456789ABCDEF"
 
 puts " PlainText: #{m}"
-puts "CipherText: #{d.encrypt(m).upcase}"
+cipher_text = d.encrypt(m).upcase
+puts "CipherText: #{cipher_text}"
+decrypted = d.decrypt(cipher_text).upcase
+puts "  Decryped: #{decrypted}"
