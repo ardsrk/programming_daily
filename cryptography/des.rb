@@ -1,3 +1,15 @@
+# DES ( Data Encryption Standard ) Algorithm
+#
+# Problem:
+#   1. Encrypt given plain-text using DES
+#   2. Decrypt given cipher-text using DES
+#
+# References:
+#   1. https://en.wikipedia.org/wiki/Confusion_and_diffusion
+#   2. https://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
+#   3. https://www.youtube.com/watch?v=kPBJIhpcZgE 
+#   4. https://www.youtube.com/watch?v=l-7YW06BFNs 
+
 class Integer
 
   # msb: most significant bit
